@@ -1,4 +1,11 @@
 {
+  "name": "slack-reminder-backend",
+  "version": "1.0.0",
+  "description": "Backend for Slack reminders",
+  "main": "index.js",
+  "repository": "git@github.com:standout/slack-reminder-backend.git",
+  "author": "Kevin Sjöberg <kev.sjoberg@gmail.com>",
+  "license": "MIT",
   "dependencies": {
     "express": "^4.16.3"
   }
