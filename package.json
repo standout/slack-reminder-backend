@@ -12,7 +12,8 @@
   },
   "dependencies": {
     "express": "^4.16.3",
-    "graphql-request": "^1.5.2"
+    "graphql-request": "^1.5.2",
+    "redis": "^2.8.0"
   },
   "devDependencies": {
     "express": "^4.16.3",
