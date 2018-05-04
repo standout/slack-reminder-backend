@@ -64,7 +64,9 @@ exports.getRequestedReviewers = function(token, owner) {
       const result = { pull_requests: [] }
       data.organization.repositories.edges.forEach((repo) => {
         repo.node.pullRequests.edges.forEach((pr) => {
-          const resp = {
+          if (pr.node.reviewRequests.edges.length === 0) return
+
+          result.pull_requests.push({
             repository: repo.node.name,
             user: pr.node.author.login,
             title: pr.node.title,
@@ -75,8 +77,7 @@ exports.getRequestedReviewers = function(token, owner) {
             reviewers: pr.node.reviewRequests.edges.map((reviewRequest) => {
               return reviewRequest.node.requestedReviewer.login
             })
-          }
-          result.pull_requests.push(resp)
+          })
         })
       })
       return result
