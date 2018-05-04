@@ -7,9 +7,13 @@
   "author": "Kevin Sjöberg <kev.sjoberg@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.js",
+    "start-dev": "nodemon index.js"
   },
   "dependencies": {
     "express": "^4.16.3"
+  },
+  "devDependencies": {
+    "nodemon": "^1.17.3"
   }
 }
