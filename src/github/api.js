@@ -1,13 +1,64 @@
 const { request, GraphQLClient } = require('graphql-request')
 const queries = require('./queries')
+const crypto = require('crypto')
+const https  = require('https')
+const querystring = require('querystring')
 
-const client = new GraphQLClient('https://api.github.com/graphql', {
-  headers: {
-    Authorization: 'Bearer insert_token_here',
+const doRequest = (options, callback) => {
+  const defaultOptions = {
+    host: 'api.github.com',
+    port: 443,
+    method: 'GET',
+    headers: {
+      'Accept': 'application/json'
+    }
   }
-})
 
-exports.getRequestedReviewers = function(owner) {
+  https
+  .request(Object.assign(defaultOptions, options), parseResponse(callback))
+  .end()
+}
+
+const parseResponse = (callback) => {
+  return (res) => {
+    let body = ''
+    res.on('data', (chunk) => body += chunk)
+    res.on('end', () => {
+      if (res.statusCode >= 200 < 300) {
+        callback(null, JSON.parse(body))
+      } else {
+        callback({
+          body: body,
+          statusCode: res.statusCode
+        }, null)
+      }
+    })
+  }
+}
+
+const path = (path, query) =>
+  path + ((query && Object.keys(query) !== 0) ? '?' + querystring.stringify(query) : '')
+
+exports.accessToken = (code, state, callback) => {
+  doRequest({
+    host: 'github.com',
+    method: 'POST',
+    path: path('/login/oauth/access_token', {
+      client_id: process.env.GITHUB_CLIENT_ID,
+      client_secret: process.env.GITHUB_CLIENT_SECRET,
+      code: code,
+      state: state,
+    })
+  }, callback)
+}
+
+exports.getRequestedReviewers = function(token, owner) {
+  const client = new GraphQLClient('https://api.github.com/graphql', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    }
+  })
+
   return client.request(queries.getRequestedReviewers(owner))
     .then((data) => {
       const result = { pullRequests: [] }
