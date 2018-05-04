@@ -1,0 +1,18 @@
+run.config:
+  engine: nodejs
+  engine.config:
+    runtime: nodejs-9.8
+    dep_manager: yarn
+  extra_path_dirs:
+    - node_modules/.bin
+  extra_steps:
+    - yarn
+  cache_dirs:
+    - node_modules
+
+data.redis:
+  image: nanobox/redis:3.0
+
+web.main:
+  start:
+    node: yarn start

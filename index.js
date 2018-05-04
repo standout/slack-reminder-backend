@@ -1,12 +1,16 @@
 const crypto = require('crypto')
 const express = require('express')
-const url = require ('url')
 const redis = require('redis')
+const querystring = require('querystring')
 const githubAPI = require("./src/github/api")
 
 const appState = crypto.randomBytes(32).toString('hex')
 
-const client = redis.createClient()
+const client = redis.createClient({
+  host: process.env.DATA_REDIS_HOST || '127.0.0.1',
+  port: 6379
+})
+
 const {promisify} = require('util');
 const getAsync = promisify(client.get).bind(client);
 
@@ -17,15 +21,15 @@ app.get('/providers/github/login', async (req, res) => {
   const token = await getAsync('token')
   if (token) { return res.sendStatus(200) }
 
-  const url = new URL('/login/oauth/authorize', 'https://github.com')
-  url.search = new URLSearchParams({
+  const url = 'https://github.com/login/oauth/authorize'
+  const query = querystring.stringify({
     client_id: process.env.GITHUB_CLIENT_ID,
     scope: 'user:email read:org',
     state: appState,
     redirect_uri: `${process.env.SLACK_REMINDER_REDIRECT_BASE_URL}/providers/github/authorize`,
   })
 
-  res.redirect(url)
+  res.redirect(`${url}?${query}`)
 })
 
 app.get('/providers/github/requested_reviewers', async (req, res) => {
@@ -46,4 +50,4 @@ app.get('/providers/github/authorize', (req, res) => {
 })
 
 app.use(express.static('public'))
-app.listen(3000, () => console.log('Server started on port 3000'))
+app.listen(process.env.APP_PORT, () => console.log(`Server started on port ${process.env.APP_PORT}`))
