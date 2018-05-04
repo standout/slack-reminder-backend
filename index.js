@@ -24,7 +24,7 @@ app.get('/providers/github/login', async (req, res) => {
   const url = 'https://github.com/login/oauth/authorize'
   const query = querystring.stringify({
     client_id: process.env.GITHUB_CLIENT_ID,
-    scope: 'user:email read:org',
+    scope: 'user:email read:org repo',
     state: appState,
     redirect_uri: `${process.env.SLACK_REMINDER_REDIRECT_BASE_URL}/providers/github/authorize`,
   })
