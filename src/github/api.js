@@ -76,7 +76,7 @@ exports.getRequestedReviewers = function(token, owner) {
               return reviewRequest.node.requestedReviewer.login
             })
           }
-          result.pullRequests.push(resp)
+          result.pull_requests.push(resp)
         })
       })
       return result
