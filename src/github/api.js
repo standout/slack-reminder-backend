@@ -61,7 +61,7 @@ exports.getRequestedReviewers = function(token, owner) {
 
   return client.request(queries.getRequestedReviewers(owner))
     .then((data) => {
-      const result = { pullRequests: [] }
+      const result = { pull_requests: [] }
       data.organization.repositories.edges.forEach((repo) => {
         repo.node.pullRequests.edges.forEach((pr) => {
           const resp = {
