@@ -6,6 +6,9 @@
   "repository": "git@github.com:standout/slack-reminder-backend.git",
   "author": "Kevin Sjöberg <kev.sjoberg@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "express": "^4.16.3"
   }
