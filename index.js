@@ -15,7 +15,6 @@ const unauthenticated = (res) => res.sendStatus(401)
 
 app.get('/providers/github/login', async (req, res) => {
   const token = await getAsync('token')
-  console.log('token', token)
   if (token) { return res.sendStatus(200) }
 
   const url = new URL('/login/oauth/authorize', 'https://github.com')
@@ -23,7 +22,7 @@ app.get('/providers/github/login', async (req, res) => {
     client_id: process.env.GITHUB_CLIENT_ID,
     scope: 'user:email read:org',
     state: appState,
-    redirect_uri: 'http://ee559d2d.ngrok.io/providers/github/authorize',
+    redirect_uri: `${process.env.SLACK_REMINDER_REDIRECT_BASE_URL}/providers/github/authorize`,
   })
 
   res.redirect(url)
